@@ -46,9 +46,19 @@ router.post('/', async (req, res) => {
             }
         )
 
+        const result = UserModel.update(
+            { 
+                accessToken: accessToken, 
+                refreshToken: refreshToken
+            },
+            {
+                where: { id: user.id }
+            }
+        )
+
         res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000})
         
-        return res.status(200).json({ 'success': `User ${user.name} ${user.surname} logged in.`, accessToken: accessToken })
+        return res.status(200).json({ 'data': { accessToken: accessToken }, 'message': `User ${user.name} ${user.surname} logged in.`})
     }
 })
 
