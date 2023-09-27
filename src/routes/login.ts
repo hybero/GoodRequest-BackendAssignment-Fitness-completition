@@ -24,11 +24,17 @@ router.post('/', async (req, res) => {
     if(!match) {
         return res.status(403).json({ 'message': 'Wrong password' })        
     } else {
-        const { password, ...user } = foundUser.dataValues
         
         const accessToken = jwt.sign(
             {   
-                'UserInfo': { ...user }
+                'UserInfo': {
+                    'id': foundUser.id,
+                    'name': foundUser.name,
+                    'surname': foundUser.surname,
+                    'email': foundUser.email,
+                    'age': foundUser.age,
+                    'role': foundUser.role
+                }
             },
             process.env.ACCESS_TOKEN_SECRET,
             { 
@@ -38,7 +44,14 @@ router.post('/', async (req, res) => {
         
         const refreshToken = jwt.sign(
             { 
-                'UserInfo': { ...user }
+                'UserInfo': {
+                    'id': foundUser.id,
+                    'name': foundUser.name,
+                    'surname': foundUser.surname,
+                    'email': foundUser.email,
+                    'age': foundUser.age,
+                    'role': foundUser.role
+                }
             },
             process.env.REFRESH_TOKEN_SECRET,
             { 
@@ -46,19 +59,14 @@ router.post('/', async (req, res) => {
             }
         )
 
-        const result = UserModel.update(
-            { 
-                accessToken: accessToken, 
-                refreshToken: refreshToken
-            },
-            {
-                where: { id: user.id }
-            }
-        )
+        foundUser.accessToken = accessToken
+        foundUser.refreshToken = refreshToken
+
+        await foundUser.save()
 
         res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000})
         
-        return res.status(200).json({ 'data': { accessToken: accessToken }, 'message': `User ${user.name} ${user.surname} logged in.`})
+        return res.status(200).json({ 'data': { accessToken: accessToken }, 'message': `User ${foundUser.name} ${foundUser.surname} logged in.`})
     }
 })
 
