@@ -2,12 +2,14 @@
 
 import path from 'path'
 import fs from 'fs'
-import { Sequelize } from 'sequelize'
+import { Dialect, Sequelize } from 'sequelize'
+import { dbConfig } from '../config/db.config'
 
 import defineExercise from './exercise'
 import defineProgram from './program'
 
-const sequelize: Sequelize = new Sequelize('postgresql://localhost:5432/fitness_app', {
+const sequelize: Sequelize = new Sequelize(`postgresql://${dbConfig.USER}:${dbConfig.PASSWORD}@${dbConfig.HOST}:5432/fitness_app`, {
+	dialect: dbConfig.dialect as Dialect,
 	logging: false
 })
 
