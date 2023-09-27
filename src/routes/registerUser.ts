@@ -8,8 +8,8 @@ const router: Router = Router()
 
 router.post('/', async (req: Request, res: Response) => {
 
-    if(!req.body.name || !req.body.surname || !req.body.nickName || !req.body.email || !req.body.password || !req.body.age || !req.body.role) {
-        return res.status(400).json({ 'message': 'Properties name, surname, nickName, email, password, age, role are required.' })
+    if(!req.body.email || !req.body.password || !req.body.role) {
+        return res.status(400).json({ 'message': 'Properties email, password, role are required.' })
     }
 
     const hashedPwd = await bcrypt.hash(req.body.password, 10)
