@@ -5,6 +5,8 @@ import express from 'express'
 import { sequelize } from './db'
 import ProgramRouter from './routes/programs'
 import ExerciseRouter from './routes/exercises'
+import { UserRouter } from './routes/users'
+import { registerUserRouter } from './routes/registerUser'
 
 const app = express()
 
@@ -21,17 +23,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/programs', ProgramRouter())
 app.use('/exercises', ExerciseRouter())
 
-// const httpServer = http.createServer(app)
+app.use('/register', registerUserRouter)
 
-// sequelize.sync()
+// app.use(jwtAuth)
 
-// console.log('Sync database', 'postgresql://localhost:5432/fitness_app')
+app.use('/users', UserRouter)
 
-// httpServer.listen(8000).on('listening', () => console.log(`Server started at port ${8000}`))
 
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-});
+const httpServer = http.createServer(app)
 
-// export default httpServer
+sequelize.sync()
+
+console.log('Sync database', 'postgresql://localhost:5432/fitness_app')
+
+httpServer.listen(8000).on('listening', () => console.log(`Server started at port ${8000}`))
+
+export default httpServer
