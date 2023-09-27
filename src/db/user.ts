@@ -51,11 +51,11 @@ export default (sequelize: Sequelize) => {
 			type: DataTypes.STRING(30),
 		},
 		accessToken: {
-			type: DataTypes.STRING(500),
+			type: DataTypes.STRING(1000),
 			allowNull: true
 		},
 		refreshToken: {
-			type: DataTypes.STRING(500),
+			type: DataTypes.STRING(1000),
 			allowNull: true
 		}
 	}, {
