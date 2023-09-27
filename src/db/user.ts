@@ -17,6 +17,8 @@ export class UserModel extends DatabaseModel {
 	email: String
 	age: Number
 	role: String
+	accessToken: String
+	refreshToken: String
 }
 
 export default (sequelize: Sequelize) => {
@@ -47,6 +49,14 @@ export default (sequelize: Sequelize) => {
 		},
 		role: {
 			type: DataTypes.STRING(30),
+		},
+		accessToken: {
+			type: DataTypes.STRING(500),
+			allowNull: true
+		},
+		refreshToken: {
+			type: DataTypes.STRING(500),
+			allowNull: true
 		}
 	}, {
 		paranoid: true,
