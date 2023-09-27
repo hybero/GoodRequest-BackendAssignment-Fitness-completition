@@ -40,4 +40,4 @@ router.post('/', async (req: Request, res: Response) => {
 	})
 })
 
-export { router as registerUserRouter }
+export { router as RegisterUserRouter }

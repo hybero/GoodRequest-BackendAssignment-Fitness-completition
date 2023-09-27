@@ -6,7 +6,8 @@ import { sequelize } from './db'
 import ProgramRouter from './routes/programs'
 import ExerciseRouter from './routes/exercises'
 import { UserRouter } from './routes/users'
-import { registerUserRouter } from './routes/registerUser'
+import { RegisterUserRouter } from './routes/registerUser'
+import { LoginRouter } from './routes/login'
 
 const app = express()
 
@@ -23,7 +24,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/programs', ProgramRouter())
 app.use('/exercises', ExerciseRouter())
 
-app.use('/register', registerUserRouter)
+app.use('/register', RegisterUserRouter)
+app.use('/login', LoginRouter)
 
 // app.use(jwtAuth)
 
