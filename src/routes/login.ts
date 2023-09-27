@@ -1,6 +1,5 @@
 import express from 'express'
 const router = express.Router()
-import path from 'node:path'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
