@@ -7,7 +7,7 @@ import { sequelize } from './db'
 import ProgramRouter from './routes/programs'
 import ExerciseRouter from './routes/exercises'
 import { UserRouter } from './routes/users'
-import { RegisterUserRouter } from './routes/registerUser'
+import { RegisterRouter } from './routes/register'
 import { LoginRouter } from './routes/login'
 import { LogoutRouter } from './routes/logout'
 
@@ -28,11 +28,11 @@ app.use(cookieParser())
 app.use('/programs', ProgramRouter())
 app.use('/exercises', ExerciseRouter())
 
-app.use('/register', RegisterUserRouter)
+app.use('/register', RegisterRouter)
 app.use('/login', LoginRouter)
 app.use('/logout', LogoutRouter)
 
-// app.use(jwtAuth)
+// app.use(verifyJwt)
 
 app.use('/users', UserRouter)
 
