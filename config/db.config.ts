@@ -1,6 +1,6 @@
 export const dbConfig = {
     HOST: "localhost",
-    USER: "postgres",
+    USER: "pavolh",
     PASSWORD: "pavol123",
     DB: "fitness_app",
     dialect: "postgres",
