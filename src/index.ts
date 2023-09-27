@@ -1,6 +1,7 @@
 import http from 'http'
 import express from 'express'
 // import * as bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
 
 import { sequelize } from './db'
 import ProgramRouter from './routes/programs'
@@ -8,6 +9,7 @@ import ExerciseRouter from './routes/exercises'
 import { UserRouter } from './routes/users'
 import { RegisterUserRouter } from './routes/registerUser'
 import { LoginRouter } from './routes/login'
+import { LogoutRouter } from './routes/logout'
 
 const app = express()
 
@@ -21,11 +23,14 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+app.use(cookieParser())
+
 app.use('/programs', ProgramRouter())
 app.use('/exercises', ExerciseRouter())
 
 app.use('/register', RegisterUserRouter)
 app.use('/login', LoginRouter)
+app.use('/logout', LogoutRouter)
 
 // app.use(jwtAuth)
 
