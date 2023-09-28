@@ -4,8 +4,8 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 
 import { sequelize } from './db'
-import ProgramRouter from './routes/programs'
-import ExerciseRouter from './routes/exercises'
+import { ProgramRouter } from './routes/programs'
+import { ExerciseRouter } from './routes/exercises'
 import { UserRouter } from './routes/users'
 import { RegisterRouter } from './routes/register'
 import { LoginRouter } from './routes/login'
@@ -34,9 +34,9 @@ app.use('/refresh', RefreshRouter)
 
 app.use(verifyJWT)
 
-app.use('/programs', ProgramRouter())
+app.use('/exercises', ExerciseRouter)
 
-app.use('/exercises', ExerciseRouter())
+app.use('/programs', ProgramRouter)
 
 app.use('/users', UserRouter)
 
