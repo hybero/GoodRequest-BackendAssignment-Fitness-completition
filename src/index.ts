@@ -10,6 +10,7 @@ import { UserRouter } from './routes/users'
 import { RegisterRouter } from './routes/register'
 import { LoginRouter } from './routes/login'
 import { LogoutRouter } from './routes/logout'
+import { RefreshRouter } from './routes/refresh'
 
 const app = express()
 
@@ -25,14 +26,16 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser())
 
-app.use('/programs', ProgramRouter())
-app.use('/exercises', ExerciseRouter())
-
 app.use('/register', RegisterRouter)
 app.use('/login', LoginRouter)
 app.use('/logout', LogoutRouter)
+app.use('/refresh', RefreshRouter)
 
 // app.use(verifyJwt)
+
+app.use('/programs', ProgramRouter())
+
+app.use('/exercises', ExerciseRouter())
 
 app.use('/users', UserRouter)
 
