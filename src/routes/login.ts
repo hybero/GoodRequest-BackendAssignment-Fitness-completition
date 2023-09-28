@@ -1,11 +1,12 @@
+import { Request, Response, Router } from 'express'
 import express from 'express'
-const router = express.Router()
+const router: Router = express.Router()
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
 import { UserModel } from '../db/user'
 
-router.post('/', async (req, res) => {
+router.post('/', async (req: Request, res: Response) => {
     const { email, password } = req.body
 
     if(!email || !password) return res.status(400).json({ 'message': 'Email and password are required.' })

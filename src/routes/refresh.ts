@@ -1,10 +1,11 @@
+import { Router, Request, Response } from 'express'
 import express from 'express'
-const router = express.Router()
+const router: Router = express.Router()
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
 import { UserModel } from '../db/user'
 
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
     
     const cookies = req.cookies
     
