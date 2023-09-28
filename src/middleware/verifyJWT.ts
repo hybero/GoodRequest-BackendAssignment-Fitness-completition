@@ -16,6 +16,8 @@ interface UpdatedRequest extends Request {
 export const verifyJWT = (req: UpdatedRequest, res: Response, next: NextFunction) => {
     
     const authHeader = req.headers.authorization || req.headers.Authorization
+
+    if(typeof authHeader === 'undefined') return res.status(400).json({ 'message': 'Authorization failed.' })
     
     if (typeof authHeader === 'string') {
         
