@@ -17,7 +17,8 @@ export const verifyJWT = (req: UpdatedRequest, res: Response, next: NextFunction
     
     const authHeader = req.headers.authorization || req.headers.Authorization
     
-    if (typeof authHeader === 'string' && authHeader.startsWith('Bearer ')) {
+    if (typeof authHeader === 'string') {
+        
         if(!authHeader?.startsWith('Bearer ')) return res.sendStatus(401)
         
         const token = authHeader.split(' ')[1]
@@ -34,6 +35,7 @@ export const verifyJWT = (req: UpdatedRequest, res: Response, next: NextFunction
                     age: decoded.UserInfo.age,
                     role: decoded.UserInfo.role,
                 }
+                
                 next()
             }
         })
