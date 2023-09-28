@@ -11,6 +11,7 @@ import { RegisterRouter } from './routes/register'
 import { LoginRouter } from './routes/login'
 import { LogoutRouter } from './routes/logout'
 import { RefreshRouter } from './routes/refresh'
+import { verifyJWT } from './middleware/verifyJWT'
 
 const app = express()
 
@@ -31,7 +32,7 @@ app.use('/login', LoginRouter)
 app.use('/logout', LogoutRouter)
 app.use('/refresh', RefreshRouter)
 
-// app.use(verifyJwt)
+app.use(verifyJWT)
 
 app.use('/programs', ProgramRouter())
 
