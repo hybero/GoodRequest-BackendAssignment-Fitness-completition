@@ -122,4 +122,4 @@ router.put('/:id?/program', verifyRoles('ADMIN'), async (req: Request, res: Resp
 
 })
 
-export { router as AdminExerciseRouter}
+export { router as AdminExercisesRouter}

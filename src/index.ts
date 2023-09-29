@@ -6,11 +6,12 @@ import { sequelize } from './db'
 import { ProgramRouter } from './routes/programs'
 
 // Admin routers
-import { AdminExerciseRouter } from './routes/admin/exercises'
-import { AdminUserRouter } from './routes/admin/users'
+import { AdminExercisesRouter } from './routes/admin/exercises'
+import { AdminUsersRouter } from './routes/admin/users'
 
 // User routers
 import { UserUsersRouter } from './routes/user/users'
+import { UserExercisesRouter } from './routes/user/exercises'
 
 // Public routers
 import { RegisterRouter } from './routes/register'
@@ -39,11 +40,12 @@ app.use('/refresh', RefreshRouter)
 app.use(verifyJWT)
 
 // Admin api routes
-app.use('/admin/exercises', AdminExerciseRouter)
-app.use('/admin/users', AdminUserRouter)
+app.use('/admin/exercises', AdminExercisesRouter)
+app.use('/admin/users', AdminUsersRouter)
 
 // User routes
 app.use('/user/users', UserUsersRouter)
+app.use('/user/exercises', UserExercisesRouter)
 
 
 // app.use('/programs', ProgramRouter)

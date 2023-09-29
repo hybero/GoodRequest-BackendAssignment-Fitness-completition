@@ -61,4 +61,4 @@ router.put('/:id?', async (req: Request, res: Response) => {
 	})
 })
 
-export { router as AdminUserRouter }
+export { router as AdminUsersRouter }
