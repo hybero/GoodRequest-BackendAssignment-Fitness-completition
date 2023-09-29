@@ -10,7 +10,7 @@ import { AdminExerciseRouter } from './routes/admin/exercises'
 import { AdminUserRouter } from './routes/admin/users'
 
 // User routers
-import { UserRouter } from './routes/user/users'
+import { UserUsersRouter } from './routes/user/users'
 
 // Public routers
 import { RegisterRouter } from './routes/register'
@@ -43,7 +43,7 @@ app.use('/admin/exercises', AdminExerciseRouter)
 app.use('/admin/users', AdminUserRouter)
 
 // User routes
-app.use('/users', UserRouter)
+app.use('/user/users', UserUsersRouter)
 
 
 // app.use('/programs', ProgramRouter)
