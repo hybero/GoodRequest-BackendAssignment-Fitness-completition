@@ -3,6 +3,7 @@ import { verifyRoles } from '../middleware/verifyRoles'
 
 import { models } from '../db'
 import { ExerciseModel } from '../db/exercise'
+import { ProgramModel } from '../db/program'
 import { EXERCISE_DIFFICULTY } from '../utils/enums'
 
 const router: Router = Router()
@@ -12,7 +13,7 @@ const {
 	Program
 } = models
 
-router.get('/admin', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
+router.get('/', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
 	
 	const exercises = await Exercise.findAll({
 		include: [{
@@ -21,13 +22,15 @@ router.get('/admin', verifyRoles('ADMIN'), async (req: Request, res: Response) =
 		}]
 	})
 
+	if(!exercises) return res.status(404).json({ 'message': 'No exercises were found.' })
+
 	return res.json({
 		data: exercises,
-		message: 'List of exercises'
+		message: 'List of exercises.'
 	})
 })
 
-router.post('/admin', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
+router.post('/', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
 
 	if(!req.body.difficulty || !req.body.name || !req.body.programID) return res.status(400).json({ 'message': 'Difficulty, name and programID are required.' })
 
@@ -43,20 +46,22 @@ router.post('/admin', verifyRoles('ADMIN'), async (req: Request, res: Response) 
 	
 	return res.json({
 		data: exercise,
-		message: 'Exercise created'
+		message: 'Exercise created.'
 	})
 
 })
 
-router.put('/admin/:id?', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
+router.put('/:id?', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
 
 	if(!req.params.id) return res.status(400).json({ 'message': 'Parameter id is required.' })
 
 	if(!Object.values(EXERCISE_DIFFICULTY).includes(req.body.difficulty)) return res.status(400).json({ 'message': 'Difficulty value is invalid.' })
 
-	let exercise = await ExerciseModel.findOne({
+	const exercise = await ExerciseModel.findOne({
 		where: { id: req.params.id }
 	})
+
+	if(!exercise) return res.status(404).json({ 'message': `Exercise with id ${req.params.id} not found.` })
 
 	if('difficulty' in req.body) exercise.difficulty = req.body.difficulty
 	if('name' in req.body) exercise.name = req.body.name
@@ -66,26 +71,56 @@ router.put('/admin/:id?', verifyRoles('ADMIN'), async (req: Request, res: Respon
 	
 	return res.json({
 		data: exercise,
-		message: 'Exercise updated'
+		message: 'Exercise updated.'
 	})
 
 })
 
-router.delete('/admin/:id?', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
+router.delete('/:id?', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
 
 	if(!req.params.id) return res.status(400).json({ 'message': 'Parameter id is required.' })
 
-	let exercise = await ExerciseModel.findOne({
+	const exercise = await ExerciseModel.findOne({
 		where: { id: req.params.id }
 	})
 
-	if(!exercise) return res.status(204).json({ 'message': `Exercise with id ${req.params.id} not found.` })
+	if(!exercise) return res.status(404).json({ 'message': `Exercise with id ${req.params.id} not found.` })
 
 	await ExerciseModel.destroy({
 		where: { id: req.params.id }
 	  });
 	
 	return res.json({ 'message': 'Exercise deleted.' })
+
+})
+
+router.put('/:id?/program', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
+
+	if(!req.params.id) return res.status(400).json({ 'message': 'Parameter id is required.' })
+
+	if(!req.body.name) return res.status(400).json({ 'message': 'Name is required.' })
+
+	const exercise = await ExerciseModel.findOne({
+		attributes: ['programID'],
+		where: { id: req.params.id }
+	})
+
+	if(!exercise) return res.status(404).json({ 'message': `Exercise with id ${req.params.id} not found.` })
+
+	let program = await ProgramModel.findOne({
+		where: { id: exercise.programID }
+	})
+
+	if(!program) return res.status(404).json({ 'message': `Program for exercise with id ${req.params.id} not found.` })
+
+	program.name = req.body.name
+
+	program.save()
+	
+	return res.json({
+		data: program,
+		message: 'Program updated.'
+	})
 
 })
 
