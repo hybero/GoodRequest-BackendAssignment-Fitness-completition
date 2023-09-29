@@ -41,7 +41,7 @@ router.get('/completed', verifyRoles('USER'), async (req: UpdatedRequest, res: R
         }
     })
 
-    if(!exercisesTracks) return res.status(404).json({ 'message': 'No exercises were found.' })
+    if(!exercisesTracks) return res.status(404).json({ 'message': 'No exercises tracks were found.' })
 
     // Group tracks by exercises
     const groupedExercisesTracks = groupExercisesTracks(exercisesTracks)
@@ -60,7 +60,7 @@ router.get('/', verifyRoles('USER'), async (req: UpdatedRequest, res: Response) 
         }
     })
 
-    if(!exercisesTracks) return res.status(404).json({ 'message': 'No exercises were found.' })
+    if(!exercisesTracks) return res.status(404).json({ 'message': 'No exercises tracks were found.' })
 
     // Group tracks by exercises
     const groupedExercisesTracks = groupExercisesTracks(exercisesTracks)
@@ -68,42 +68,69 @@ router.get('/', verifyRoles('USER'), async (req: UpdatedRequest, res: Response) 
     return res.status(200).json({ 'data': groupedExercisesTracks, 'message': 'All exercises.' })
 })
 
-const groupExercisesTracks = (exercisesTracks: any) => {
-    const sortedExercises: any[] = []
+router.delete('/:id?', verifyRoles('USER'), async (req: UpdatedRequest, res: Response) => {
 
-    exercisesTracks.forEach((track: any) => {
-        // Creating index for array
-        let index = Number(track.exerciseID) - 1
-        
-        // define tracks list for exercise if does not exist yet
-        if(!sortedExercises[index]) {
-            sortedExercises[index] = {
-                exerciseID: Number(track.exerciseID),
-                tracks: [], // Initialize tracks as an empty array
-                totalDuration: 0, // Initialize totalDuration to 0
-                completed: null // Initialize completed to null
-            };
-        }
+    if(!req.params.id) return res.status(400).json({ 'message': 'Parameter id is required.' })
 
-        // Push the track into the tracks array
-        sortedExercises[index].tracks.push(track.toJSON());
-
-        // Add the duration to the totalDuration
-        sortedExercises[index].totalDuration += Number(track.duration);
-
-        // Set completed for exercise if track with datetime in completed field is found
-        if(track.completed) {
-            sortedExercises[index].completed = track.completed;
+    const exerciseTracks = await UserExercise.findAll({
+        where: {
+            userID: req.UserInfo.id,
+            exerciseID: req.params.id
         }
     })
 
-    return sortedExercises
-}
+    if(!exerciseTracks) return res.status(404).json({ 'message': 'No exercise tracks were found.' })
 
-const filterCompletedExercises = (sortedExercises: Array<Object>) => {
+    const groupedTracks = groupExercisesTracks(exerciseTracks)
+
+    if(groupedTracks[0].completed === null) return res.status(422).json({ 'data': groupedTracks[0], 'message': 'Can not delete the exercise tracks, because the exercise is not completed.' })
+
+    await UserExercise.destroy({
+		where: { 
+            userID: req.UserInfo.id,
+            exerciseID: req.params.id
+        }
+	});
+	
+	return res.json({ 'message': 'Exercise tracks deleted.' })
+})
+
+const groupExercisesTracks = (exercisesTracks: any) => {
+    const groupedExercisesMap = new Map();
+
+    exercisesTracks.forEach((track: any) => {
+        const exerciseID = Number(track.exerciseID);
+
+        // If the exerciseID is not in the map, create a new entry
+        if (!groupedExercisesMap.has(exerciseID)) {
+            groupedExercisesMap.set(exerciseID, {
+                exerciseID,
+                tracks: [],
+                totalDuration: 0,
+                completed: null,
+            });
+        }
+
+        const exercise = groupedExercisesMap.get(exerciseID);
+
+        exercise.tracks.push(track.toJSON());
+        exercise.totalDuration += Number(track.duration);
+
+        if (track.completed) {
+            exercise.completed = track.completed;
+        }
+    });
+
+    // Convert the Map values to an array
+    const groupedExercises = Array.from(groupedExercisesMap.values());
+
+    return groupedExercises;
+};
+
+const filterCompletedExercises = (groupedExercises: Array<Object>) => {
     const filteredExercises: any[] = []
 
-    sortedExercises.forEach((exercise: any) => {
+    groupedExercises.forEach((exercise: any) => {
         if(exercise.completed) {
             filteredExercises.push(exercise)
         }
