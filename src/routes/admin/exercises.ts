@@ -86,7 +86,7 @@ router.delete('/:id?', verifyRoles('ADMIN'), async (req: Request, res: Response)
 
 	await Exercise.destroy({
 		where: { id: req.params.id }
-	  });
+	});
 	
 	return res.json({ 'message': 'Exercise deleted.' })
 
