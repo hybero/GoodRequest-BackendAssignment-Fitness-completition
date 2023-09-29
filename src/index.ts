@@ -34,7 +34,7 @@ app.use('/refresh', RefreshRouter)
 
 app.use(verifyJWT)
 
-app.use('/exercises', ExerciseRouter)
+app.use('/admin/exercises', ExerciseRouter)
 
 app.use('/programs', ProgramRouter)
 
