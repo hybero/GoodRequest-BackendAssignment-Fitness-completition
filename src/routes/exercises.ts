@@ -2,8 +2,6 @@ import { Router, Request, Response, NextFunction } from 'express'
 import { verifyRoles } from '../middleware/verifyRoles'
 
 import { models } from '../db'
-import { ExerciseModel } from '../db/exercise'
-import { ProgramModel } from '../db/program'
 import { EXERCISE_DIFFICULTY } from '../utils/enums'
 
 const router: Router = Router()
@@ -38,7 +36,7 @@ router.post('/', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
 
 	const { difficulty, name, programID } = req.body
 
-	const exercise = await ExerciseModel.create({
+	const exercise = await Exercise.create({
 		difficulty: difficulty,
 		name: name,
 		programID: programID || null
@@ -57,7 +55,7 @@ router.put('/:id?', verifyRoles('ADMIN'), async (req: Request, res: Response) =>
 
 	if(!Object.values(EXERCISE_DIFFICULTY).includes(req.body.difficulty)) return res.status(400).json({ 'message': 'Difficulty value is invalid.' })
 
-	const exercise = await ExerciseModel.findOne({
+	const exercise = await Exercise.findOne({
 		where: { id: req.params.id }
 	})
 
@@ -80,13 +78,13 @@ router.delete('/:id?', verifyRoles('ADMIN'), async (req: Request, res: Response)
 
 	if(!req.params.id) return res.status(400).json({ 'message': 'Parameter id is required.' })
 
-	const exercise = await ExerciseModel.findOne({
+	const exercise = await Exercise.findOne({
 		where: { id: req.params.id }
 	})
 
 	if(!exercise) return res.status(404).json({ 'message': `Exercise with id ${req.params.id} not found.` })
 
-	await ExerciseModel.destroy({
+	await Exercise.destroy({
 		where: { id: req.params.id }
 	  });
 	
@@ -100,14 +98,14 @@ router.put('/:id?/program', verifyRoles('ADMIN'), async (req: Request, res: Resp
 
 	if(!req.body.name) return res.status(400).json({ 'message': 'Name is required.' })
 
-	const exercise = await ExerciseModel.findOne({
+	const exercise = await Exercise.findOne({
 		attributes: ['programID'],
 		where: { id: req.params.id }
 	})
 
 	if(!exercise) return res.status(404).json({ 'message': `Exercise with id ${req.params.id} not found.` })
 
-	let program = await ProgramModel.findOne({
+	let program = await Program.findOne({
 		where: { id: exercise.programID }
 	})
 
