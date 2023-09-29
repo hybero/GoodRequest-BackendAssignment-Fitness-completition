@@ -1,10 +1,8 @@
-import { Router, Request, Response } from 'express'
+import { Router, Response } from 'express'
 import { verifyRoles } from '../../middleware/verifyRoles'
 import { UpdatedRequest } from '../../middleware/verifyJWT'
 
 import { models } from '../../db'
-import Op from 'sequelize/types/lib/operators'
-import { UserExerciseModel } from '../../db/userExcercise'
 
 const router: Router = Router()
 
@@ -81,6 +79,7 @@ router.delete('/:id?', verifyRoles('USER'), async (req: UpdatedRequest, res: Res
 
     if(!exerciseTracks) return res.status(404).json({ 'message': 'No exercise tracks were found.' })
 
+    // Group tracks by exercises
     const groupedTracks = groupExercisesTracks(exerciseTracks)
 
     if(groupedTracks[0].completed === null) return res.status(422).json({ 'data': groupedTracks[0], 'message': 'Can not delete the exercise tracks, because the exercise is not completed.' })
