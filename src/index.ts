@@ -1,6 +1,5 @@
 import http from 'http'
 import express from 'express'
-// import * as bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 
 import { sequelize } from './db'
@@ -21,10 +20,6 @@ import { RefreshRouter } from './routes/refresh'
 import { verifyJWT } from './middleware/verifyJWT'
 
 const app = express()
-
-// Original parsing
-// app.use(bodyParser.urlencoded({ extended: true }))
-// app.use(bodyParser.json())
 
 // parse requests of content-type - application/json
 app.use(express.json());
