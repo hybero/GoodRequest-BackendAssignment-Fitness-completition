@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
 
-interface UpdatedRequest extends Request {
+export interface UpdatedRequest extends Request {
     UserInfo: {
         id?: string;
         name?: string;
