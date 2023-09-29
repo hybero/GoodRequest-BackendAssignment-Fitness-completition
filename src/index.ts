@@ -11,7 +11,7 @@ import { AdminExerciseRouter } from './routes/admin/exercises'
 import { AdminUserRouter } from './routes/admin/users'
 
 // User routers
-import { UserRouter } from './routes/users'
+import { UserRouter } from './routes/user/users'
 
 // Public routers
 import { RegisterRouter } from './routes/register'
@@ -48,9 +48,12 @@ app.use('/admin/exercises', AdminExerciseRouter)
 app.use('/admin/users', AdminUserRouter)
 
 // User routes
-app.use('/programs', ProgramRouter)
-
 app.use('/users', UserRouter)
+
+
+// app.use('/programs', ProgramRouter)
+
+
 
 
 const httpServer = http.createServer(app)

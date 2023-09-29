@@ -1,9 +1,13 @@
 import { Router, Request, Response } from 'express'
 
-import { UserModel } from '../db/user'
-import { models } from '../db'
+import { UserModel } from '../../db/user'
+import { models } from '../../db'
 
 const router: Router = Router()
+
+const {
+	User
+} = models
 
 router.get('/', async (req: Request, res: Response) => {
 	const users = await UserModel.findAll()
