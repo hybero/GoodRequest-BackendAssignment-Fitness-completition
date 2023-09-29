@@ -5,8 +5,15 @@ import cookieParser from 'cookie-parser'
 
 import { sequelize } from './db'
 import { ProgramRouter } from './routes/programs'
-import { ExerciseRouter } from './routes/exercises'
+
+// Admin routers
+import { AdminExerciseRouter } from './routes/admin/exercises'
+import { AdminUserRouter } from './routes/admin/users'
+
+// User routers
 import { UserRouter } from './routes/users'
+
+// Public routers
 import { RegisterRouter } from './routes/register'
 import { LoginRouter } from './routes/login'
 import { LogoutRouter } from './routes/logout'
@@ -27,15 +34,20 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser())
 
+// Public routes
 app.use('/register', RegisterRouter)
 app.use('/login', LoginRouter)
 app.use('/logout', LogoutRouter)
 app.use('/refresh', RefreshRouter)
 
+// Middleware for verifying JsonWebToken
 app.use(verifyJWT)
 
-app.use('/admin/exercises', ExerciseRouter)
+// Admin api routes
+app.use('/admin/exercises', AdminExerciseRouter)
+app.use('/admin/users', AdminUserRouter)
 
+// User routes
 app.use('/programs', ProgramRouter)
 
 app.use('/users', UserRouter)

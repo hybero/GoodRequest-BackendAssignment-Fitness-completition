@@ -1,8 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express'
-import { verifyRoles } from '../middleware/verifyRoles'
+import { verifyRoles } from '../../middleware/verifyRoles'
 
-import { models } from '../db'
-import { EXERCISE_DIFFICULTY } from '../utils/enums'
+import { models } from '../../db'
+import { EXERCISE_DIFFICULTY } from '../../utils/enums'
 
 const router: Router = Router()
 
@@ -122,4 +122,4 @@ router.put('/:id?/program', verifyRoles('ADMIN'), async (req: Request, res: Resp
 
 })
 
-export { router as ExerciseRouter}
+export { router as AdminExerciseRouter}
