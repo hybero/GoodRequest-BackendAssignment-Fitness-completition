@@ -13,6 +13,8 @@ export class UserExerciseModel extends DatabaseModel {
 	id: number
     completed: string
 	duration: number
+    userID: number
+    exerciseID: number
 }
 
 export default (sequelize: Sequelize) => {
@@ -25,38 +27,58 @@ export default (sequelize: Sequelize) => {
 			autoIncrement: true
 		},
         completed: {
-            type: DataTypes.DATE,
-			allowNull: false
+            type: DataTypes.DATE
         },
 		duration: {
 			type: DataTypes.BIGINT,
 			allowNull: false
-		}
+		},
+        userID: {
+          type: DataTypes.BIGINT,
+          allowNull: false,
+        },
+        exerciseID: {
+          type: DataTypes.BIGINT,
+          allowNull: false,
+        }
 	}, {
 		timestamps: true,
 		sequelize,
 		modelName: 'UserExercise',
         tableName: 'users_exercises',
+        // indexes: [
+        //     // Add an index to improve query performance
+        //     {
+        //         // Using to remove unique constraint for foreign keys, but it does not work as expected
+        //         unique: false,
+        //         fields: ['userID', 'exerciseID'],
+        //     },
+        // ]
 	})
 
-    UserExerciseModel.associate = (models) => {
+    /*
+    *   Not using because of generated unique constraint that doesn't allow
+    *   multiple rows with same userID and exerciseID
+    *   Don't know how to disable the uniqueness
+    */
+    // UserExerciseModel.associate = (models) => {
         
-        UserModel.belongsToMany(ExerciseModel, {
-            through: UserExerciseModel,
-            foreignKey: {
-                name: 'userID',
-                allowNull: false
-            }
-        });
+    //     UserModel.belongsToMany(ExerciseModel, {
+    //         through: UserExerciseModel,
+    //         foreignKey: {
+    //             name: 'userID',
+    //             allowNull: false
+    //         }
+    //     });
 
-        ExerciseModel.belongsToMany(UserModel, {
-            through: UserExerciseModel,
-            foreignKey: {
-                name: 'exerciseID',
-                allowNull: false
-            }
-        });
-	}
+    //     ExerciseModel.belongsToMany(UserModel, {
+    //         through: UserExerciseModel,
+    //         foreignKey: {
+    //             name: 'exerciseID',
+    //             allowNull: false
+    //         }
+    //     });
+	//}
 
 	return UserExerciseModel
 }
