@@ -94,6 +94,7 @@ router.delete('/:id?', verifyRoles('USER'), async (req: UpdatedRequest, res: Res
 	return res.json({ 'message': 'Exercise tracks deleted.' })
 })
 
+// Group tracks by exercises
 const groupExercisesTracks = (exercisesTracks: any) => {
     const groupedExercisesMap = new Map();
 
@@ -126,6 +127,7 @@ const groupExercisesTracks = (exercisesTracks: any) => {
     return groupedExercises;
 };
 
+// Filter only exercises which are completed
 const filterCompletedExercises = (groupedExercises: Array<Object>) => {
     const filteredExercises: any[] = []
 
