@@ -9,7 +9,7 @@ router.get('/', async (req: Request, res: Response) => {
     
     const cookies = req.cookies
     
-    if(!cookies?.jwt) return res.sendStatus(401)
+    if(!cookies?.jwt) return res.status(401).json({ 'message': 'Missing cookie, nothing to do.' })
     
     const refreshToken = cookies.jwt
 
@@ -19,13 +19,13 @@ router.get('/', async (req: Request, res: Response) => {
         }    
     })
     
-    if(!foundUser) return res.sendStatus(403)
+    if(!foundUser) return res.status(403).json({ 'message': 'User not found.' })
     
     jwt.verify(
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
         async (err: any, decoded: any) => {
-            if(err || foundUser.email !== decoded.UserInfo.email) return res.sendStatus(403)
+            if(err || foundUser.email !== decoded.UserInfo.email) return res.status(403).json({ 'message': 'User not verified.' })
             
             const accessToken = jwt.sign(
                 { 

@@ -8,7 +8,7 @@ router.get('/', async (req: Request, res: Response) => {
     
     const cookies = req.cookies
 
-    if(!cookies?.jwt) return res.sendStatus(400).json({ 'message': 'Missing cookie, nothing to do.' })
+    if(!cookies?.jwt) return res.sendStatus(401).json({ 'message': 'Missing cookie, nothing to do.' })
     
     const refreshToken = cookies.jwt
     
@@ -20,7 +20,7 @@ router.get('/', async (req: Request, res: Response) => {
     
     if(!foundUser) {
         res.clearCookie('jwt', { httpOnly: true })
-        return res.status(500).json({ 'message': 'User not found.' })
+        return res.status(403).json({ 'message': 'User not found.' })
     }
 
     foundUser.accessToken = null
