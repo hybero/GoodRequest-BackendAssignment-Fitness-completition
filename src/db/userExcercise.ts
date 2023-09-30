@@ -11,7 +11,7 @@ import { UserModel } from './user'
 
 export class UserExerciseModel extends DatabaseModel {
 	id: number
-    completed: string
+    completed: Date | null
 	duration: number
     userID: number
     exerciseID: number
@@ -46,39 +46,34 @@ export default (sequelize: Sequelize) => {
 		sequelize,
 		modelName: 'UserExercise',
         tableName: 'users_exercises',
-        // indexes: [
-        //     // Add an index to improve query performance
-        //     {
-        //         // Using to remove unique constraint for foreign keys, but it does not work as expected
-        //         unique: false,
-        //         fields: ['userID', 'exerciseID'],
-        //     },
-        // ]
+        indexes: [
+            // Add an index to improve query performance
+            {
+                // Using to remove unique constraint for foreign keys, but it does not work as expected
+                unique: false,
+                fields: ['userID', 'exerciseID'],
+            },
+        ]
 	})
 
-    /*
-    *   Not using because of generated unique constraint that doesn't allow
-    *   multiple rows with same userID and exerciseID
-    *   Don't know how to disable the uniqueness
-    */
-    // UserExerciseModel.associate = (models) => {
+    UserExerciseModel.associate = (models) => {
         
-    //     UserModel.belongsToMany(ExerciseModel, {
-    //         through: UserExerciseModel,
-    //         foreignKey: {
-    //             name: 'userID',
-    //             allowNull: false
-    //         }
-    //     });
+        UserModel.belongsToMany(ExerciseModel, {
+            through: UserExerciseModel,
+            foreignKey: {
+                name: 'userID',
+                allowNull: false
+            }
+        });
 
-    //     ExerciseModel.belongsToMany(UserModel, {
-    //         through: UserExerciseModel,
-    //         foreignKey: {
-    //             name: 'exerciseID',
-    //             allowNull: false
-    //         }
-    //     });
-	//}
+        ExerciseModel.belongsToMany(UserModel, {
+            through: UserExerciseModel,
+            foreignKey: {
+                name: 'exerciseID',
+                allowNull: false
+            }
+        });
+	}
 
 	return UserExerciseModel
 }
