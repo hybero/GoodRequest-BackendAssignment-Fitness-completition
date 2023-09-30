@@ -30,7 +30,7 @@ router.get('/', async (req: Request, res: Response) => {
 
     res.clearCookie('jwt', { httpOnly: true })
 
-    return res.status(204).json({ 'message': 'User logged out' })
+    return res.status(204).json({ 'message': 'User logged out.' })
 })
 
 export { router as LogoutRouter }

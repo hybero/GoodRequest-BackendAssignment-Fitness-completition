@@ -66,7 +66,7 @@ router.post('/', async (req: Request, res: Response) => {
 
         res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000})
         
-        return res.status(200).json({ 'data': { accessToken: accessToken }, 'message': `User ${foundUser.name} ${foundUser.surname} logged in.`})
+        return res.status(200).json({ 'data': { accessToken: accessToken }, 'message': `User logged in.`})
     }
 })
 
