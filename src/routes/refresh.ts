@@ -1,31 +1,37 @@
 import { Router, Request, Response } from 'express'
 import express from 'express'
-const router: Router = express.Router()
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
-import { UserModel } from '../db/user'
+import { localize } from '../utils/localizator'
+import { models } from '../db'
+
+const router: Router = express.Router()
+
+const {
+    User
+} = models
 
 router.get('/', async (req: Request, res: Response) => {
     
     const cookies = req.cookies
     
-    if(!cookies?.jwt) return res.status(401).json({ 'message': 'Missing cookie, nothing to do.' })
+    if(!cookies?.jwt) return res.status(401).json({ 'message': localize(req, 'Missing cookie, nothing to do.') })
     
     const refreshToken = cookies.jwt
 
-    const foundUser = await UserModel.findOne({
+    const foundUser = await User.findOne({
         where: { 
             refreshToken: refreshToken
         }    
     })
     
-    if(!foundUser) return res.status(403).json({ 'message': 'User not found.' })
+    if(!foundUser) return res.status(403).json({ 'message': localize(req, 'User not found.') })
     
     jwt.verify(
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
         async (err: any, decoded: any) => {
-            if(err || foundUser.email !== decoded.UserInfo.email) return res.status(403).json({ 'message': 'User not verified.' })
+            if(err || foundUser.email !== decoded.UserInfo.email) return res.status(403).json({ 'message': localize(req, 'User not verified.') })
             
             const accessToken = jwt.sign(
                 { 
@@ -46,7 +52,7 @@ router.get('/', async (req: Request, res: Response) => {
 
             await foundUser.save()
 
-            res.json({ 'data': { 'accessToken': accessToken }, 'message': 'Refresh token successful.' }) 
+            res.json({ 'data': { 'accessToken': accessToken }, 'message': localize(req, 'Refresh token successful.') }) 
         }
     )
 

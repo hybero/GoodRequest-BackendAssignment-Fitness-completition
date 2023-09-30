@@ -5,6 +5,10 @@ import cookieParser from 'cookie-parser'
 import { sequelize } from './db'
 import { ProgramRouter } from './routes/programs'
 
+// Custom middleware
+import { verifyJWT } from './middleware/verifyJWT'
+import { localizationHeaders } from './middleware/localization'
+
 // Admin routers
 import { AdminExercisesRouter } from './routes/admin/exercises'
 import { AdminUsersRouter } from './routes/admin/users'
@@ -18,17 +22,20 @@ import { RegisterRouter } from './routes/register'
 import { LoginRouter } from './routes/login'
 import { LogoutRouter } from './routes/logout'
 import { RefreshRouter } from './routes/refresh'
-import { verifyJWT } from './middleware/verifyJWT'
 
 const app = express()
 
-// parse requests of content-type - application/json
+// Parse requests of content-type - application/json
 app.use(express.json());
 
-// parse requests of content-type - application/x-www-form-urlencoded
+// Parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+// Parse cookies
 app.use(cookieParser())
+
+// Get/Set localization header
+app.use(localizationHeaders)
 
 // Public routes
 app.use('/register', RegisterRouter)
@@ -56,6 +63,17 @@ sequelize.sync()
 
 console.log('Sync database', 'postgresql://localhost:5432/fitness_app')
 
-httpServer.listen(8000).on('listening', () => console.log(`Server started at port ${8000}`))
+httpServer.listen(8000).on('listening', () => {
+    console.log(`Server started at port ${8000}`)
+
+    // // All uncaught exceptions end here
+    // process.on('uncaughtException', err => {
+    //     console.log(`uncaughtException: ${err}`)
+        
+    //     // Exit app, but we don't want that
+    //     // Keep commented out
+    //     // process.exit(1)
+    // })
+})
 
 export default httpServer

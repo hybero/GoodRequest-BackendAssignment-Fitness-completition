@@ -1,18 +1,24 @@
 import { Router, Request, Response } from 'express'
 import express from 'express'
-const router: Router = express.Router()
 import 'dotenv/config'
-import { UserModel } from '../db/user'
+import { localize } from '../utils/localizator'
+import { models } from '../db'
+
+const router: Router = express.Router()
+
+const {
+    User
+} = models
 
 router.get('/', async (req: Request, res: Response) => {
     
     const cookies = req.cookies
 
-    if(!cookies?.jwt) return res.sendStatus(401).json({ 'message': 'Missing cookie, nothing to do.' })
+    if(!cookies?.jwt) return res.sendStatus(401).json({ 'message': localize(req, 'Missing cookie, nothing to do.') })
     
     const refreshToken = cookies.jwt
     
-    const foundUser = await UserModel.findOne(
+    const foundUser = await User.findOne(
         {
             where: { refreshToken: refreshToken }
         }
@@ -20,7 +26,7 @@ router.get('/', async (req: Request, res: Response) => {
     
     if(!foundUser) {
         res.clearCookie('jwt', { httpOnly: true })
-        return res.status(403).json({ 'message': 'User not found.' })
+        return res.status(403).json({ 'message': localize(req, 'User not found.') })
     }
 
     foundUser.accessToken = null
@@ -30,7 +36,7 @@ router.get('/', async (req: Request, res: Response) => {
 
     res.clearCookie('jwt', { httpOnly: true })
 
-    return res.status(200).json({ 'message': 'User logged out.' })
+    return res.status(200).json({ 'message': localize(req, 'User logged out.') })
 })
 
 export { router as LogoutRouter }

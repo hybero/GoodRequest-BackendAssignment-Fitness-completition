@@ -1,9 +1,9 @@
 import { Router, Response } from 'express'
 import { verifyRoles } from '../../middleware/verifyRoles'
 import { UpdatedRequest } from '../../middleware/verifyJWT'
-
 import { models } from '../../db'
 import { Op } from 'sequelize'
+import { localize } from '../../utils/localizator'
 
 const router: Router = Router()
 
@@ -13,7 +13,7 @@ const {
 
 router.post('/track', verifyRoles('USER'), async (req: UpdatedRequest, res: Response) => {
 
-    if(!req.body.exerciseID || !req.body.duration) return res.status(400).json({ 'message': 'Parameter exerciseID and duration are required.' })
+    if(!req.body.exerciseID || !req.body.duration) return res.status(400).json({ 'message': localize(req, 'Parameter exerciseID and duration are required.') })
 
     // Check if completed (true) was sent in request
     const completed = req.body.completed ? new Date() : null;
@@ -37,14 +37,14 @@ router.post('/track', verifyRoles('USER'), async (req: UpdatedRequest, res: Resp
             exerciseID: Number(req.body.exerciseID)
         })
 
-        message = 'Tracking of users exercise created.'
+        message = localize(req, 'Tracking of users exercise created.')
     } else {
         // Update tracking
         foundUserExercise.duration = Number(foundUserExercise.duration) + Number(req.body.duration)
         foundUserExercise.completed = completed
         foundUserExercise.save()
 
-        message = 'Tracking of users exercise updated.'
+        message = localize(req, 'Tracking of users exercise updated.')
     }
 	
 	return res.json({
@@ -64,9 +64,9 @@ router.get('/completed', verifyRoles('USER'), async (req: UpdatedRequest, res: R
         }
     })
 
-    if(!completedExercises) return res.status(404).json({ 'message': 'No completed exercises were found.' })
+    if(!completedExercises) return res.status(404).json({ 'message': localize(req, 'No completed exercises were found.') })
 
-    return res.status(200).json({ 'data': completedExercises, 'message': 'Completed exercises.' })
+    return res.status(200).json({ 'data': completedExercises, 'message': localize(req, 'Completed exercises.') })
 })
 
 router.get('/', verifyRoles('USER'), async (req: UpdatedRequest, res: Response) => {
@@ -77,14 +77,14 @@ router.get('/', verifyRoles('USER'), async (req: UpdatedRequest, res: Response) 
         }
     })
 
-    if(!exercises) return res.status(404).json({ 'message': 'No exercises were found.' })
+    if(!exercises) return res.status(404).json({ 'message': localize(req, 'No exercises were found.') })
 
-    return res.status(200).json({ 'data': exercises, 'message': 'All exercises.' })
+    return res.status(200).json({ 'data': exercises, 'message': localize(req, 'All exercises.') })
 })
 
 router.delete('/:id?', verifyRoles('USER'), async (req: UpdatedRequest, res: Response) => {
 
-    if(!req.params.id) return res.status(400).json({ 'message': 'Parameter id is required.' })
+    if(!req.params.id) return res.status(400).json({ 'message': localize(req, 'Parameter id is required.') })
 
     const exercise = await UserExercise.findOne({
         where: {
@@ -93,9 +93,9 @@ router.delete('/:id?', verifyRoles('USER'), async (req: UpdatedRequest, res: Res
         }
     })
 
-    if(!exercise) return res.status(404).json({ 'message': 'Exercise was not found.' })
+    if(!exercise) return res.status(404).json({ 'message': localize(req, 'Exercise was not found.') })
 
-    if(exercise.completed === null) return res.status(422).json({ 'data': exercise, 'message': 'Can not delete the exercise, because the exercise is not completed.' })
+    if(exercise.completed === null) return res.status(422).json({ 'data': exercise, 'message': localize(req, 'Can not delete the exercise, because the exercise is not completed.') })
 
     await UserExercise.destroy({
 		where: { 
@@ -104,7 +104,7 @@ router.delete('/:id?', verifyRoles('USER'), async (req: UpdatedRequest, res: Res
         }
 	});
 	
-	return res.json({ 'message': 'Exercise deleted.' })
+	return res.json({ 'message': localize(req, 'Exercise deleted.') })
 })
 
 export { router as UserExercisesRouter }
