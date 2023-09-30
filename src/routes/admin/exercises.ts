@@ -1,4 +1,4 @@
-import { Router, Request, Response, NextFunction } from 'express'
+import { Router, Request, Response } from 'express'
 import { verifyRoles } from '../../middleware/verifyRoles'
 
 import { models } from '../../db'
@@ -17,6 +17,8 @@ router.get('/', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
 
 	if(req.query.limit && Number(req.query.limit) < 1) return res.status(400).json({ 'message': 'Parameter limit must be bigger than 0.' })
 
+	if(req.query.programID && Number(req.query.programID) < 1) return res.status(400).json({ 'message': 'Parameter programID must be bigger than 0.' })
+
 	let offset = null
 	let limit = null
 
@@ -25,10 +27,12 @@ router.get('/', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
 		limit = Number(req.query.limit)
 	}
 
+	let programID = req.query.programID ? req.query.programID : null
+
 	let exercises = null
 
-	if(offset !== null && limit !== null) {
-		// We have pagination
+	if(offset !== null && limit !== null && programID === null) {
+		// We have pagination with no programID specified
 		exercises = await Exercise.findAll({
 			offset: offset,
 			limit: limit,
@@ -37,8 +41,32 @@ router.get('/', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
 				as: 'program'
 			}]
 		})
+	} else if((offset !== null && limit !== null) && programID !== null) {
+		// Return paginated exercises with specified programID
+		exercises = await Exercise.findAll({
+			where: {
+				programID: programID
+			},
+			offset: offset,
+			limit: limit,
+			include: [{
+				model: Program,
+				as: 'program'
+			}]
+		})
+	} else if(programID !== null) {
+		// We have programID and no pagination
+		exercises = await Exercise.findAll({
+			where: {
+				programID: programID
+			},
+			include: [{
+				model: Program,
+				as: 'program'
+			}]
+		})
 	} else {
-		// Return all exercises
+		// Return all exercises (No pagination, No programID)
 		exercises = await Exercise.findAll({
 			include: [{
 				model: Program,
