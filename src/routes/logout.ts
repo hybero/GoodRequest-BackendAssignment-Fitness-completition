@@ -20,7 +20,7 @@ router.get('/', async (req: Request, res: Response) => {
     
     if(!foundUser) {
         res.clearCookie('jwt', { httpOnly: true })
-        return res.status(204).json({ 'message': 'User not found.' })
+        return res.status(500).json({ 'message': 'User not found.' })
     }
 
     foundUser.accessToken = null
@@ -30,7 +30,7 @@ router.get('/', async (req: Request, res: Response) => {
 
     res.clearCookie('jwt', { httpOnly: true })
 
-    return res.status(204).json({ 'message': 'User logged out.' })
+    return res.status(200).json({ 'message': 'User logged out.' })
 })
 
 export { router as LogoutRouter }
