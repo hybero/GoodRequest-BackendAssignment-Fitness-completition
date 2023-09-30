@@ -12,13 +12,40 @@ const {
 } = models
 
 router.get('/', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
-	
-	const exercises = await Exercise.findAll({
-		include: [{
-			model: Program,
-			as: 'program'
-		}]
-	})
+
+	if(req.query.page && Number(req.query.page) < 1) return res.status(400).json({ 'message': 'Parameter page must be bigger than 0.' })
+
+	if(req.query.limit && Number(req.query.limit) < 1) return res.status(400).json({ 'message': 'Parameter limit must be bigger than 0.' })
+
+	let offset = null
+	let limit = null
+
+	if(req.query.page && req.query.limit) {
+		offset = (Number(req.query.page) -1) * Number(req.query.limit)
+		limit = Number(req.query.limit)
+	}
+
+	let exercises = null
+
+	if(offset !== null && limit !== null) {
+		// We have pagination
+		exercises = await Exercise.findAll({
+			offset: offset,
+			limit: limit,
+			include: [{
+				model: Program,
+				as: 'program'
+			}]
+		})
+	} else {
+		// Return all exercises
+		exercises = await Exercise.findAll({
+			include: [{
+				model: Program,
+				as: 'program'
+			}]
+		})
+	}
 
 	if(!exercises) return res.status(404).json({ 'message': 'No exercises were found.' })
 
