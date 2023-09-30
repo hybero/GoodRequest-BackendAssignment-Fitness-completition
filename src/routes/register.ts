@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express'
 import bcrypt from 'bcrypt'
 
+import { validateEmail } from '../utils/emailValidator'
+
 import { UserModel } from '../db/user'
 import { models } from '../db'
 
@@ -11,6 +13,8 @@ router.post('/', async (req: Request, res: Response) => {
     if(!req.body.email || !req.body.password || !req.body.role) {
         return res.status(400).json({ 'message': 'Properties email, password, role are required.' })
     }
+
+    if(!validateEmail(req.body.email)) return res.status(400).json({ 'message': 'Parameter email is not a valid email address.' })
 
     const hashedPwd = await bcrypt.hash(req.body.password, 10)
     
