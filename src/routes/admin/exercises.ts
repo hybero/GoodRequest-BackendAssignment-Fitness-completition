@@ -3,6 +3,7 @@ import { verifyRoles } from '../../middleware/verifyRoles'
 
 import { models } from '../../db'
 import { EXERCISE_DIFFICULTY } from '../../utils/enums'
+import { Op } from 'sequelize'
 
 const router: Router = Router()
 
@@ -19,6 +20,10 @@ router.get('/', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
 
 	if(req.query.programID && Number(req.query.programID) < 1) return res.status(400).json({ 'message': 'Parameter programID must be bigger than 0.' })
 
+	if(req.query.search && String(req.query.search).length < 1) return res.status(400).json({ 'message': 'Search string must be at least 1 character long.' })
+
+	let search = req.query.search ? req.query.search : null
+
 	let offset = null
 	let limit = null
 
@@ -31,7 +36,33 @@ router.get('/', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
 
 	let exercises = null
 
-	if(offset !== null && limit !== null && programID === null) {
+	if(search && !offset && !limit) {
+		// We have search, ignoring pagination and filter by parameterID
+		exercises = await Exercise.findAll({
+			where: {
+				name: { [Op.like]: '%' + search + '%' }
+			},
+			include: [{
+				model: Program,
+				as: 'program'
+			}]
+		})
+	}
+	else if(search && offset && limit) {
+		// We have search, ignoring pagination and filter by parameterID
+		exercises = await Exercise.findAll({
+			where: {
+				name: { [Op.like]: '%' + search + '%' }
+			},
+			offset: offset,
+			limit: limit,
+			include: [{
+				model: Program,
+				as: 'program'
+			}]
+		})
+	} 
+	else if(offset !== null && limit !== null && programID === null) {
 		// We have pagination with no programID specified
 		exercises = await Exercise.findAll({
 			offset: offset,
@@ -41,7 +72,8 @@ router.get('/', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
 				as: 'program'
 			}]
 		})
-	} else if((offset !== null && limit !== null) && programID !== null) {
+	} 
+	else if((offset !== null && limit !== null) && programID !== null) {
 		// Return paginated exercises with specified programID
 		exercises = await Exercise.findAll({
 			where: {
@@ -54,7 +86,8 @@ router.get('/', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
 				as: 'program'
 			}]
 		})
-	} else if(programID !== null) {
+	} 
+	else if(programID !== null) {
 		// We have programID and no pagination
 		exercises = await Exercise.findAll({
 			where: {
@@ -65,7 +98,8 @@ router.get('/', verifyRoles('ADMIN'), async (req: Request, res: Response) => {
 				as: 'program'
 			}]
 		})
-	} else {
+	} 
+	else {
 		// Return all exercises (No pagination, No programID)
 		exercises = await Exercise.findAll({
 			include: [{
