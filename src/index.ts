@@ -66,14 +66,14 @@ console.log('Sync database', 'postgresql://localhost:5432/fitness_app')
 httpServer.listen(8000).on('listening', () => {
     console.log(`Server started at port ${8000}`)
 
-    // // All uncaught exceptions end here
-    // process.on('uncaughtException', err => {
-    //     console.log(`uncaughtException: ${err}`)
+    // All uncaught exceptions end here
+    process.on('uncaughtException', err => {
+        console.log(`uncaughtException: ${err}`)
         
-    //     // Exit app, but we don't want that
-    //     // Keep commented out
-    //     // process.exit(1)
-    // })
+        // Exit app, but we don't want that
+        // Keep commented out
+        // process.exit(1)
+    })
 })
 
 export default httpServer
