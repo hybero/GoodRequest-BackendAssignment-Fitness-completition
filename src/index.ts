@@ -36,6 +36,8 @@ app.use('/login', LoginRouter)
 app.use('/logout', LogoutRouter)
 app.use('/refresh', RefreshRouter)
 
+app.use('/programs', ProgramRouter)
+
 // Middleware for verifying JsonWebToken
 app.use(verifyJWT)
 
@@ -44,13 +46,8 @@ app.use('/admin/exercises', AdminExercisesRouter)
 app.use('/admin/users', AdminUsersRouter)
 
 // User routes
-app.use('/user/users', UserUsersRouter)
 app.use('/user/exercises', UserExercisesRouter)
-
-
-// app.use('/programs', ProgramRouter)
-
-
+app.use('/user/users', UserUsersRouter)
 
 
 const httpServer = http.createServer(app)
