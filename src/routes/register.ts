@@ -29,27 +29,19 @@ router.post('/', async (req: Request, res: Response) => {
     const hashedPwd = await bcrypt.hash(req.body.password, 10)
     
     const user = await User.create({
-        name: req.body.name,
-        surname: req.body.surname,
-        nickName: req.body.nickName,
+        name: req.body.name || null,
+        surname: req.body.surname || null,
+        nickName: req.body.nickName || null,
         email: req.body.email,
         password: hashedPwd,
-        age: req.body.age,
+        age: req.body.age || null,
         role: req.body.role
     })
 
-    const { id, name, surname, nickName, email, age, role } = user;
+    const userData = user.toJSON()
 
     return res.json({
-        data: {
-            id,
-            name,
-            surname,
-            nickName,
-            email,
-            age,
-            role,
-        },
+        data: userData,
         message: localize(req, 'New user was created.')
 	})
 })
