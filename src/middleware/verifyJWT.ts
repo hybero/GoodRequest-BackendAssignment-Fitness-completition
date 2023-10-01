@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
+import { localize } from '../utils/localizator';
 
 export interface UpdatedRequest extends Request {
     UserInfo: {
@@ -17,7 +18,7 @@ export const verifyJWT = (req: UpdatedRequest, res: Response, next: NextFunction
     
     const authHeader = req.headers.authorization || req.headers.Authorization
 
-    if(typeof authHeader === 'undefined') return res.status(400).json({ 'message': 'Authorization failed.' })
+    if(typeof authHeader === 'undefined') return res.status(400).json({ 'message': localize(req, 'Authorization failed.') })
     
     if (typeof authHeader === 'string') {
         

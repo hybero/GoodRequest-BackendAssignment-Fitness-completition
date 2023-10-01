@@ -39,5 +39,6 @@
     "List of users.": "Zoznam užívateľov.",
     "User was not found.": "Užívateľ nenájdený.",
     "Your details.": "Vaše detaily.",
-    "Email already in use.": "Email je už použitý."
+    "Email already in use.": "Email je už použitý.",
+    "Authorization failed.": "Autorizácia neúspešná."
 }

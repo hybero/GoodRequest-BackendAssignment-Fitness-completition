@@ -39,5 +39,6 @@
     "List of users.": "List of users.",
     "User was not found.": "User was not found.",
     "Your details.": "Your details.",
-    "Email already in use.": "Email already in use."
+    "Email already in use.": "Email already in use.",
+    "Authorization failed.": "Authorization failed."
 }
