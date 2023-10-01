@@ -18,6 +18,14 @@ router.post('/', async (req: Request, res: Response) => {
 
     if(!validateEmail(req.body.email)) return res.status(400).json({ 'message': localize(req, 'Parameter email is not a valid email address.') })
 
+    const emailExists = await User.findOne({
+        where: {
+            email: req.body.email
+        }
+    })
+
+    if(emailExists) return res.status(400).json({ 'message': localize(req, 'Email already in use.') })
+
     const hashedPwd = await bcrypt.hash(req.body.password, 10)
     
     const user = await User.create({

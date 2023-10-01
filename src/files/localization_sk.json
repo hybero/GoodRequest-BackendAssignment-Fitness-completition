@@ -38,5 +38,6 @@
     "Can not delete the exercise, because the exercise is not completed.": "Nemožno zmazať cvičenie, lebo cičenie nie je dokončené.",
     "List of users.": "Zoznam užívateľov.",
     "User was not found.": "Užívateľ nenájdený.",
-    "Your details.": "Vaše detaily."
+    "Your details.": "Vaše detaily.",
+    "Email already in use.": "Email je už použitý."
 }

@@ -38,5 +38,6 @@
     "Can not delete the exercise, because the exercise is not completed.": "Can not delete the exercise, because the exercise is not completed.",
     "List of users.": "List of users.",
     "User was not found.": "User was not found.",
-    "Your details.": "Your details."
+    "Your details.": "Your details.",
+    "Email already in use.": "Email already in use."
 }
