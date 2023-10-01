@@ -7,7 +7,7 @@ import { Request, Response, NextFunction } from 'express'
 
 export const logEvents = async (message: string, file: string) => {
     
-    const dateTime = format(new Date(), 'yyyy-mm-dd\tHH:ii:ss')
+    const dateTime = format(new Date(), 'yyyy-MM-dd\tHH:mm:ss')
     const logItem = `${dateTime}\t${uuid()}\t${message}\n`
     
     if(!fs.existsSync(path.join(__dirname, '..', 'logs'))) {
