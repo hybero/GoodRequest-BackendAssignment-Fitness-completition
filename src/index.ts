@@ -3,7 +3,6 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 
 import { sequelize } from './db'
-import { ProgramRouter } from './routes/programs'
 
 // Custom middleware
 import { verifyJWT } from './middleware/verifyJWT'
@@ -18,6 +17,7 @@ import { UserUsersRouter } from './routes/user/users'
 import { UserExercisesRouter } from './routes/user/exercises'
 
 // Public routers
+import { ProgramRouter } from './routes/programs'
 import { RegisterRouter } from './routes/register'
 import { LoginRouter } from './routes/login'
 import { LogoutRouter } from './routes/logout'
