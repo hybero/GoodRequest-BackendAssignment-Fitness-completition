@@ -17,7 +17,7 @@ router.get('/', async (req: Request, res: Response) => {
 	
 	return res.json({
 		data: users,
-		message: 'List of users.'
+		message: localize(req, 'List of users.')
 	})
 })
 
