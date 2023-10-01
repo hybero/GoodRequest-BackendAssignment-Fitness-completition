@@ -22,8 +22,12 @@ import { RegisterRouter } from './routes/register'
 import { LoginRouter } from './routes/login'
 import { LogoutRouter } from './routes/logout'
 import { RefreshRouter } from './routes/refresh'
+import { logEvents, logger } from './utils/logEvents'
 
 const app = express()
+
+// Log requests
+app.use(logger)
 
 // Parse requests of content-type - application/json
 app.use(express.json());
@@ -70,9 +74,8 @@ httpServer.listen(8000).on('listening', () => {
     process.on('uncaughtException', err => {
         console.log(`uncaughtException: ${err}`)
         
-        // Exit app, but we don't want that
-        // Keep commented out
-        // process.exit(1)
+        // Log error event to log file
+        logEvents(`${err.name}\t${err.message}`, 'errorLog')
     })
 })
 
