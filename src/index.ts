@@ -23,6 +23,7 @@ import { LoginRouter } from './routes/login'
 import { LogoutRouter } from './routes/logout'
 import { RefreshRouter } from './routes/refresh'
 import { logEvents, logger } from './utils/logEvents'
+import { errorHandler } from './utils/errorHandler'
 
 const app = express()
 
@@ -60,6 +61,8 @@ app.use('/admin/users', AdminUsersRouter)
 app.use('/user/exercises', UserExercisesRouter)
 app.use('/user/users', UserUsersRouter)
 
+// Error handling
+app.use(errorHandler)
 
 const httpServer = http.createServer(app)
 
@@ -75,7 +78,10 @@ httpServer.listen(8000).on('listening', () => {
         console.log(`uncaughtException: ${err}`)
         
         // Log error event to log file
-        logEvents(`${err.name}\t${err.message}`, 'errorLog')
+        logEvents(`${err.name}\t${err.message}`, 'uncaughtExceptionsLog')
+
+        // Do we want to stop the app if uncaught exception occurs?
+        // process.exit(1)
     })
 })
 
