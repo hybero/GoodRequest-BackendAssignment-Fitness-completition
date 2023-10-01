@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import { validateEmail } from '../utils/emailValidator'
 import { localize } from '../utils/localizator'
 import { models } from '../db'
+import { USER_ROLE } from '../utils/enums'
 
 const router: Router = Router()
 
@@ -15,6 +16,8 @@ router.post('/', async (req: Request, res: Response) => {
     if(!req.body.email || !req.body.password || !req.body.role) {
         return res.status(400).json({ 'message': localize(req, 'Properties email, password, role are required.') })
     }
+
+    if(!Object.values(USER_ROLE).includes(req.body.role)) return res.status(400).json({ 'message': localize(req, 'User role value is invalid.') })
 
     if(!validateEmail(req.body.email)) return res.status(400).json({ 'message': localize(req, 'Parameter email is not a valid email address.') })
 

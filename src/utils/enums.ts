@@ -4,3 +4,8 @@ export enum EXERCISE_DIFFICULTY {
 	MEDIUM = 'MEDIUM',
 	HARD = 'HARD'
 }
+
+export enum USER_ROLE {
+	USER = 'USER',
+	ADMIN = 'ADMIN'
+}

@@ -40,5 +40,6 @@
     "User was not found.": "User was not found.",
     "Your details.": "Your details.",
     "Email already in use.": "Email already in use.",
-    "Authorization failed.": "Authorization failed."
+    "Authorization failed.": "Authorization failed.",
+    "User role value is invalid.": "User role value is invalid."
 }

@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express'
 import { localize } from '../../utils/localizator'
 import { models } from '../../db'
+import { USER_ROLE } from '../../utils/enums'
 
 const router: Router = Router()
 
@@ -41,6 +42,8 @@ router.put('/:id?', async (req: Request, res: Response) => {
 
 	if(!req.params.id) return res.status(400).json({ 'message': localize(req, 'Parameter id is required.') })
 	
+	if(req.body.role && !Object.values(USER_ROLE).includes(req.body.role)) return res.status(400).json({ 'message': localize(req, 'User role value is invalid.') })
+
 	const user = await User.findOne({
 		where: { id: req.params.id }
 	})
