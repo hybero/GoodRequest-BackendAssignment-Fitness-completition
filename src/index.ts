@@ -22,13 +22,13 @@ import { RegisterRouter } from './routes/register'
 import { LoginRouter } from './routes/login'
 import { LogoutRouter } from './routes/logout'
 import { RefreshRouter } from './routes/refresh'
-import { logEvents, logger } from './utils/logEvents'
+import { logEvents, logRequest } from './utils/logEvents'
 import { errorHandler } from './utils/errorHandler'
 
 const app = express()
 
 // Log requests
-app.use(logger)
+app.use(logRequest)
 
 // Parse requests of content-type - application/json
 app.use(express.json());

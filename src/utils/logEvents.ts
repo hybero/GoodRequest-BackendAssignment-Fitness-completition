@@ -17,8 +17,8 @@ export const logEvents = async (message: string, file: string) => {
     await fspromises.appendFile(path.join(__dirname, '..', 'logs', `${file}.txt`), logItem, { encoding: 'utf-8'})   
 }
 
-export const logger = (req: Request, res: Response, next: NextFunction) => {
+export const logRequest = (req: Request, res: Response, next: NextFunction) => {
     
-    logEvents(`${req.method}\t${req.headers.origin}\t${req.path}`, 'log')
+    logEvents(`${req.method}\t${req.headers.origin}\t${req.path}`, 'requests')
     next()
 }
